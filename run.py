@@ -14,9 +14,18 @@ def place_ship(board):
     return ship_row, ship_col
 
 def user_guess(board):
-    guess_row = int(input("Guess Row: ")) - 1
-    guess_col = int(input("Guess Col: ")) - 1
-    return guess_row, guess_col
+    while True:
+        try:
+            guess_row = int(input("Guess Row: ")) - 1
+            guess_col = int(input("Guess Col: ")) - 1
+
+            # Check if the inputs are within the valid range
+            if 0 <= guess_row < len(board) and 0 <= guess_col < len(board[0]):
+                return guess_row, guess_col
+            else:
+                print("Please input valid numbers between 1 and", len(board))
+        except ValueError:
+            print("Please input just one number")
 
 def play_battleship():
     board_size = 5
