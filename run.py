@@ -1,13 +1,16 @@
 import random
 
 def print_board(board):
+    # Print the current state of the game board
     for row in board:
         print(" ".join(row))
 
 def random_row_col(board):
+    # Generate a random row or column index within the board size
     return random.randint(0, len(board) - 1)
 
 def place_ship(board):
+    # Place a ship at a random location on the board and return its coordinates
     ship_row = random_row_col(board)
     ship_col = random_row_col(board)
     board[ship_row][ship_col] = "S"
@@ -16,6 +19,7 @@ def place_ship(board):
 def user_guess(board):
     while True:
         try:
+            # Get user input for row and column guesses
             guess_row = int(input("Guess Row: ")) - 1
             guess_col = int(input("Guess Col: ")) - 1
 
@@ -28,16 +32,19 @@ def user_guess(board):
             print("Please input just one number")
 
 def play_battleship():
+    # Set up the game board
     board_size = 5
     board = [["O"] * board_size for _ in range(board_size)]
 
     print("Let's play Battleship!")
     print_board(board)
 
+    # Place the user's and computer's ships on the board
     user_ship_row, user_ship_col = place_ship(board)
     computer_ship_row, computer_ship_col = place_ship(board)
 
-    for turn in range(5):  # You and the computer have 5 turns each
+    # Game loop with 5 turns for each player
+    for turn in range(5):
         print(f"\nTurn {turn + 1}")
 
         # User's turn
