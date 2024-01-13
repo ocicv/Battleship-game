@@ -1,32 +1,70 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+## Battleship Game
 
-Welcome,
+Battleship game is a Pythonterminal game, which runs in the Code Institute mock terminal on Heroku
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+In the beginning of the game user is to set three ships on the grid, after that the goal of the game is to 
+try and beat the computer by finding and destroying all computers ships before computer finds users.
 
-## Reminders
+here is the live version of my project
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+![image-of-the-project](assets/images/Home%20screen.png)
 
-## Creating the Heroku app
+## How to play
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+This is a classic battleship game in which user is playing agains computer. First user is asked
+to place three ships on the grid that are shown with a simbol "S". After that the game realy begins
+and user is asked to try and figure out where are computers ships by imputing coordinates on 
+the grid. If the user misses it will get a message and miss will be shown as "X" on the grid, and 
+if the user hits it will get the corespodning message. Game is played untill user or computer 
+find all the enemies ships.
 
-1. `heroku/python`
-2. `heroku/nodejs`
+## Features
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+Random board generation for the computers ships
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+- User cannot see the computers ships
+- Ships are placed randomly on the grid
 
-Connect your GitHub repository and deploy as normal.
+User board
 
-## Constraints
+- User is able to see the board and place ships on the board
+  before the game begins
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+![image-of-the-board](assets/images/Home%20screen.png)
 
----
+- Play agains the computer
+- Keep score
+- Accepts user imput 
 
-Happy coding!
+Imput validation and error checking 
+
+- If user imputs a value that toes not corespond with the game
+  the game will warn him and let him try again
+- User must enter the right value provided by example
+- User cannot enter the same value twice 
+
+## Data Model 
+
+I decided to use a board calss as a model. The game creates a board that user can see and 
+place the ships on, also it creates a random board with ships for the computer. 
+
+Board class stores the board size, the number of ships, the position of the ships and the 
+guesses against the board.
+
+## Testing
+
+I have manualy tested the project by doing the following:
+
+- Passed the code trough the PEP8 and confirmed there are errors but only in 
+  lenght of some code, no functionality errors.
+  I understand that lenght of the code can be adjusted but I didnt want to 
+  try and break the code in order not to make serious problems with it.
+- Given Invalid inputs: string when numbers are expected, out of bounds inputs, same imput twice
+- Tested in my local terminal and the Code Institute Heroku terminal
+
+## Remaining bugs
+
+- Passed the code trough the PEP8 and confirmed there are errors but only in 
+  lenght of some code, no functionality errors.
+  I understand that lenght of the code can be adjusted but I didnt want to 
+  try and break the code in order not to make serious problems with it.
