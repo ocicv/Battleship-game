@@ -2,20 +2,24 @@ import random
 
 class Grid:
     def __init__(self, size):
+        """Initialize the grid with a specified size."""
         self.size = size
         self.grid = [['O' for _ in range(size)] for _ in range(size)]
 
     def display(self):
+        """Display the current state of the grid."""
         print("   " + " ".join([chr(i + ord('A')) for i in range(self.size)]))
         for i, row in enumerate(self.grid):
             print(f"{i + 1:2} {' '.join(row)}")
 
 class Ship:
     def __init__(self, size):
+        """Initialize a ship with a specified size and an empty list of coordinates."""
         self.size = size
         self.coordinates = []
 
     def place_ship(self, grid):
+        """Place the ship on the grid based on user input for starting position and orientation."""
         while True:
             try:
                 position = input(f"Enter the starting position for your {self.size}-length ship (e.g., A1): ")
@@ -42,6 +46,7 @@ class Ship:
             except (ValueError, IndexError):
                 print("Invalid input. Please try again.")
 
+        # Mark the ship on the grid
         for coord in self.coordinates:
             if grid.grid[coord[1]][coord[0]] == 'O':
                 grid.grid[coord[1]][coord[0]] = 'S'
@@ -51,12 +56,14 @@ class Ship:
 
 class BattleshipGame:
     def __init__(self, size):
+        """Initialize the game with two grids for the user and computer, and create ships for each player."""
         self.user_grid = Grid(size)
         self.computer_grid = Grid(size)
         self.user_ships = [Ship(3) for _ in range(3)]
         self.computer_ships = [Ship(3) for _ in range(3)]
 
     def user_place_ships(self):
+        """Allow the user to place their ships on the grid."""
         print("Welcome to Battleship!")
         self.user_grid.display()
 
@@ -65,6 +72,7 @@ class BattleshipGame:
             self.user_grid.display()
 
     def computer_place_ships(self):
+        """Randomly place computer ships on the grid."""
         for ship in self.computer_ships:
             while True:
                 col = random.randint(0, self.computer_grid.size - 1)
@@ -82,6 +90,7 @@ class BattleshipGame:
         print("Computer has placed its ships.")
 
     def user_attack(self):
+        """Allow the user to attack a position on the computer's grid."""
         while True:
             try:
                 target = input("Enter target (e.g., A1): ")
@@ -108,6 +117,7 @@ class BattleshipGame:
                 print("Invalid input. Please try again.")
 
     def computer_attack(self):
+        """Allow the computer to randomly attack a position on the user's grid."""
         while True:
             col = random.randint(0, self.user_grid.size - 1)
             row = random.randint(0, self.user_grid.size - 1)
@@ -122,10 +132,12 @@ class BattleshipGame:
                 break
 
     def is_game_over(self):
+        """Check if the game is over by checking if all ships are sunk."""
         return all(all(cell == 'X' or cell == 'S' for cell in row) for row in self.user_grid.grid) or \
                all(all(cell == 'X' or cell == 'S' for cell in row) for row in self.computer_grid.grid)
 
     def play(self):
+        """Main game loop."""
         self.user_place_ships()
         self.computer_place_ships()
 
