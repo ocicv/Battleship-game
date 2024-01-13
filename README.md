@@ -7,7 +7,7 @@ try and beat the computer by finding and destroying all computers ships before c
 
 here is the live version of my project
 
-![image-of-the-project](assets/images/Home%20screen.png)
+![image-of-the-project](images/First-screen.png)
 
 ## How to play
 
@@ -30,11 +30,13 @@ User board
 - User is able to see the board and place ships on the board
   before the game begins
 
-![image-of-the-board](assets/images/Home%20screen.png)
+![image-of-the-board](images/Screen-two.png)
 
 - Play agains the computer
 - Keep score
 - Accepts user imput 
+
+![image-of-the-board](images/Screen-three.png)
 
 Imput validation and error checking 
 
@@ -42,6 +44,8 @@ Imput validation and error checking
   the game will warn him and let him try again
 - User must enter the right value provided by example
 - User cannot enter the same value twice 
+
+![image-of-the-board](images/Screen-four.png)
 
 ## Data Model 
 
