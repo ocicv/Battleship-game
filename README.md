@@ -68,3 +68,26 @@ I have manualy tested the project by doing the following:
   lenght of some code, no functionality errors.
   I understand that lenght of the code can be adjusted but I didnt want to 
   try and break the code in order not to make serious problems with it.
+
+## Validator testing
+
+- Passed the code trough the PEP8 and confirmed there are errors but only in 
+  lenght of some code, no functionality errors.
+  I understand that lenght of the code can be adjusted but I didnt want to 
+  try and break the code in order not to make serious problems with it.
+
+## Deploiment
+
+This project is deployed using the Code Institute mock terminal for Heroku.
+Steps of deployment:
+- Cloned the depository
+- Created the ne Heroku app
+- Set the buildbacks to Pythone and NodeJS in that order
+- Link the Heroku app to the repository
+- Click on Deploy
+
+## Credits
+
+- Code Institute for the deployment terminal
+- https://bigmonty12.github.io/battleship 
+- https://www.youtube.com/watch?v=MgJBgnsDcF0
