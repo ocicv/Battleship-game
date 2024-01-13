@@ -1,137 +1,147 @@
 import random
 
-def print_board(board):
-    """
-    Print the current state of the game board with labeled columns (numbers) and rows (letters).
-    """
-    print("   " + " ".join(str(i) for i in range(1, len(board) + 1)))
-    for i, row in enumerate(board, start=1):
-        print(f"{chr(64 + i)} | {' '.join(row)}")
+class Grid:
+    def __init__(self, size):
+        self.size = size
+        self.grid = [['O' for _ in range(size)] for _ in range(size)]
 
-def user_place_ship(board, ship_symbol):
-    """
-    Allow the user to choose a position for placing a ship on the board.
-    """
-    while True:
-        try:
-            ship_row_input = input(f"Choose the row for your {ship_symbol} (A-J): ").upper()
-            if len(ship_row_input) == 1 and 'A' <= ship_row_input <= 'J':
-                ship_row = ord(ship_row_input) - 65
-                break
-            else:
-                print("Only letters A-J. Please choose a valid letter.")
-        except ValueError:
-            print("Please input just one letter.")
+    def display(self):
+        print("   " + " ".join([chr(i + ord('A')) for i in range(self.size)]))
+        for i, row in enumerate(self.grid):
+            print(f"{i + 1:2} {' '.join(row)}")
 
-    while True:
-        try:
-            ship_col_input = input(f"Choose the column for your {ship_symbol}: ")
-            if ship_col_input.isdigit():
-                ship_col = int(ship_col_input) - 1
-                if 0 <= ship_col < len(board[0]):
-                    if board[ship_row][ship_col] == "O":
-                        board[ship_row][ship_col] = ship_symbol
-                        return ship_row, ship_col
+class Ship:
+    def __init__(self, size):
+        self.size = size
+        self.coordinates = []
+
+    def place_ship(self, grid):
+        while True:
+            try:
+                position = input(f"Enter the starting position for your {self.size}-length ship (e.g., A1): ")
+                col = ord(position[0].upper()) - ord('A')
+                row = int(position[1:]) - 1
+
+                orientation = input("Enter the orientation (H for horizontal, V for vertical): ").upper()
+
+                if orientation == 'H':
+                    if col + self.size <= grid.size:
+                        self.coordinates = [(col + i, row) for i in range(self.size)]
+                        break
                     else:
-                        print("Position already taken. Please choose an empty position.")
+                        print("Invalid placement. Ship goes beyond the grid.")
+                elif orientation == 'V':
+                    if row + self.size <= grid.size:
+                        self.coordinates = [(col, row + i) for i in range(self.size)]
+                        break
+                    else:
+                        print("Invalid placement. Ship goes beyond the grid.")
                 else:
-                    print(f"Only numbers 1-{len(board[0])}. Please choose a valid column.")
-            else:
-                print("Please input just one number.")
-        except ValueError:
-            print("Please input just one number.")
+                    print("Invalid orientation. Please enter 'H' or 'V'.")
 
-def user_guess(board):
-    """
-    Allow the user to guess a position on the board.
-    """
-    while True:
-        try:
-            guess_row_input = input("Guess Row (A-J): ").upper()
-            if len(guess_row_input) == 1 and 'A' <= guess_row_input <= 'J':
-                guess_row = ord(guess_row_input) - 65
-                break
-            else:
-                print("Only letters A-J. Please choose a valid letter.")
-        except ValueError:
-            print("Please input just one letter.")
+            except (ValueError, IndexError):
+                print("Invalid input. Please try again.")
 
-    while True:
-        try:
-            guess_col_input = input("Guess Column: ")
-            if guess_col_input.isdigit():
-                guess_col = int(guess_col_input) - 1
-                if 0 <= guess_col < len(board[0]):
-                    return guess_row, guess_col
+        for coord in self.coordinates:
+            if grid.grid[coord[1]][coord[0]] == 'O':
+                grid.grid[coord[1]][coord[0]] = 'S'
+            else:
+                print("Invalid placement. Ships overlap.")
+                self.place_ship(grid)
+
+class BattleshipGame:
+    def __init__(self, size):
+        self.user_grid = Grid(size)
+        self.computer_grid = Grid(size)
+        self.user_ships = [Ship(3) for _ in range(3)]
+        self.computer_ships = [Ship(3) for _ in range(3)]
+
+    def user_place_ships(self):
+        print("Welcome to Battleship!")
+        self.user_grid.display()
+
+        for ship in self.user_ships:
+            ship.place_ship(self.user_grid)
+            self.user_grid.display()
+
+    def computer_place_ships(self):
+        for ship in self.computer_ships:
+            while True:
+                col = random.randint(0, self.computer_grid.size - 1)
+                row = random.randint(0, self.computer_grid.size - 1)
+
+                orientation = random.choice(['H', 'V'])
+
+                if orientation == 'H' and col + ship.size <= self.computer_grid.size:
+                    ship.coordinates = [(col + i, row) for i in range(ship.size)]
+                    break
+                elif orientation == 'V' and row + ship.size <= self.computer_grid.size:
+                    ship.coordinates = [(col, row + i) for i in range(ship.size)]
+                    break
+
+        print("Computer has placed its ships.")
+
+    def user_attack(self):
+        while True:
+            try:
+                target = input("Enter target (e.g., A1): ")
+                col = ord(target[0].upper()) - ord('A')
+                row = int(target[1:]) - 1
+
+                if 0 <= col < self.computer_grid.size and 0 <= row < self.computer_grid.size:
+                    if self.computer_grid.grid[row][col] == 'O':
+                        print("You missed!")
+                        self.computer_grid.grid[row][col] = 'X'
+                        break
+                    elif self.computer_grid.grid[row][col] == 'S':
+                        print("You hit a ship!")
+                        self.computer_grid.grid[row][col] = 'X'
+                        break
+                    elif self.computer_grid.grid[row][col] == 'X':
+                        print("You already targeted this position. Try again.")
+                    else:
+                        print("Invalid target. Try again.")
                 else:
-                    print(f"Only numbers 1-{len(board[0])}. Please choose a valid column.")
-            else:
-                print("Please input just one number.")
-        except ValueError:
-            print("Please input just one number.")
+                    print("Invalid target. Try again.")
 
-def play_battleship():
-    """
-    Main function to orchestrate the Battleship game.
-    """
-    board_size = 10
-    board = [["O"] * board_size for _ in range(board_size)]
+            except (ValueError, IndexError):
+                print("Invalid input. Please try again.")
 
-    print("Let's play Battleship!")
-    print_board(board)
+    def computer_attack(self):
+        while True:
+            col = random.randint(0, self.user_grid.size - 1)
+            row = random.randint(0, self.user_grid.size - 1)
 
-    # User places their ships
-    user_ships = []
-    for i in range(3):
-        print(f"\nPlace your ship {i + 1}")
-        user_ship_row, user_ship_col = user_place_ship(board, "U")
-        user_ships.append((user_ship_row, user_ship_col))
-
-    # Computer places its ships
-    computer_ships = []
-    for i in range(3):
-        computer_ship_row, computer_ship_col = computer_place_ship(board, "C")
-        computer_ships.append((computer_ship_row, computer_ship_col))
-
-    for turn in range(15):  # 15 turns total (adjust as needed)
-        print(f"\nTurn {turn + 1}")
-
-        # User's turn
-        user_guess_row, user_guess_col = user_guess(board)
-        for ship_row, ship_col in computer_ships:
-            if user_guess_row == ship_row and user_guess_col == ship_col:
-                print("Congratulations! You hit the computer's ship!")
-                computer_ships.remove((ship_row, ship_col))
+            if self.user_grid.grid[row][col] == 'O':
+                print(f"Computer missed at {chr(col + ord('A'))}{row + 1}.")
+                self.user_grid.grid[row][col] = 'X'
                 break
-        else:
-            print("You missed!")
-
-        # Computer's turn
-        computer_guess_row, computer_guess_col = random_row_col(board), random_row_col(board)
-        print(f"Computer guesses Row {chr(65 + computer_guess_row)}, Col {computer_guess_col + 1}")
-        for ship_row, ship_col in user_ships:
-            if computer_guess_row == ship_row and computer_guess_col == ship_col:
-                print("Oh no! The computer hit your ship!")
-                user_ships.remove((ship_row, ship_col))
+            elif self.user_grid.grid[row][col] == 'S':
+                print(f"Computer hit your ship at {chr(col + ord('A'))}{row + 1}!")
+                self.user_grid.grid[row][col] = 'X'
                 break
-        else:
-            print("Computer missed!")
 
-        # Check for a winner
-        if not user_ships:
-            print("\nCongratulations! You sunk all of the computer's ships. You win!")
-            break
-        elif not computer_ships:
-            print("\nOh no! The computer sunk all of your ships. You lose!")
-            break
+    def is_game_over(self):
+        return all(all(cell == 'X' or cell == 'S' for cell in row) for row in self.user_grid.grid) or \
+               all(all(cell == 'X' or cell == 'S' for cell in row) for row in self.computer_grid.grid)
 
-    print("\nGame Over.")
-    print("Your remaining ships are at:")
-    for ship_row, ship_col in user_ships:
-        print(f"Row {chr(65 + ship_row)}, Col {ship_col + 1}")
-    print("Computer's remaining ships are at:")
-    for ship_row, ship_col in computer_ships:
-        print(f"Row {chr(65 + ship_row)}, Col {ship_col + 1}")
+    def play(self):
+        self.user_place_ships()
+        self.computer_place_ships()
+
+        while not self.is_game_over():
+            self.user_grid.display()
+            self.user_attack()
+
+            if self.is_game_over():
+                print("Congratulations! You won!")
+                break
+
+            self.computer_attack()
+
+            if self.is_game_over():
+                print("Computer wins! Better luck next time.")
 
 if __name__ == "__main__":
-    play_battleship()
+    game = BattleshipGame(size=8)
+    game.play()
